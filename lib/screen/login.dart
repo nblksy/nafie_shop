@@ -159,7 +159,13 @@ class _LoginState extends State<Login> {
                       borderRadius: BorderRadius.circular(30),
                     ),
                   ),
-                  onPressed: () => login(context),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const HomePage()),
+                    );
+                  },
+                  // onPressed: () => login(context),
                   child: const Text(
                     "Login",
                     style: TextStyle(

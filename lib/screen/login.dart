@@ -27,12 +27,12 @@ class _LoginState extends State<Login> {
 
   Future<void> login(BuildContext context) async {
     final UserModel? login = await DBHelper.loginUser(
-      email: emailController.text.trim(),
+      email: emailController.text.trim(), 
       password: passwordController.text.trim(),
     );
 
     if (login != null) {
-      await PreferenceHandler().storingIsLogin(true);
+      await PreferenceHandler.storingIsLogin(true);
 
       ScaffoldMessenger.of(
         context,

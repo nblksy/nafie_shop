@@ -1,87 +1,82 @@
-import 'package:nafie_shop/models/product_model.dart';
-import 'package:nafie_shop/models/user_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:nafie_shop/models/user_model.dart';
 
 class DBHelper {
+  static Database? _database;
+
   static Future<Database> db() async {
+    if (_database != null) return _database!;
+    _database = await _initDB();
+    return _database!;
+  }
+
+  static Future<Database> _initDB() async {
     final dbPath = await getDatabasesPath();
-    return openDatabase(
-      join(dbPath, 'my_app.db'),
-      version: 5,
+    final path = join(dbPath, 'nafie_shop.db');
+
+    print('Database path: $path');
+
+    return await openDatabase(
+      path,
+      version: 1,
       onCreate: (db, version) async {
+        print('Creating database with table user...');
         await db.execute('''
           CREATE TABLE user (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            email TEXT,
-            password TEXT,
-            nama TEXT,
-            noHP TEXT,
-            role TEXT
-          )
-        ''');
-
-        await db.execute('''
-          CREATE TABLE products(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT,
-            price INTEGER
+            nama TEXT NOT NULL,
+            email TEXT NOT NULL UNIQUE,
+            password TEXT NOT NULL,
+            noHP TEXT NOT NULL
           )
         ''');
       },
     );
   }
 
-  // ================= USER =================
+  static Future<int> registerUser(UserModel user) async {
+    final database = await db();
 
-  static Future<void> registerUser(UserModel user) async {
-    final dbs = await db();
-    await dbs.insert('user', user.toMap());
+    final result = await database.insert(
+      'user',
+      user.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+
+    return result;
   }
 
   static Future<UserModel?> loginUser({
     required String email,
     required String password,
   }) async {
-    final dbs = await db();
-    final results = await dbs.query(
-      "user",
+    final database = await db();
+
+    final results = await database.query(
+      'user',
       where: 'email = ? AND password = ?',
       whereArgs: [email, password],
+      limit: 1,
     );
 
     if (results.isNotEmpty) {
       return UserModel.fromMap(results.first);
     }
+
     return null;
   }
 
-  // ================= PRODUCT =================
+  static Future<bool> isEmailExists(String email) async {
+    final database = await db();
 
-  static Future<int> insertProduct(ProductModel product) async {
-    final dbs = await db();
-    return await dbs.insert('products', product.toMap());
-  }
-
-  static Future<int> updateProduct(ProductModel product) async {
-    final dbs = await db();
-    return await dbs.update(
-      'products',
-      product.toMap(),
-      where: 'id = ?',
-      whereArgs: [product.id],
+    final results = await database.query(
+      'user',
+      where: 'email = ?',
+      whereArgs: [email],
+      limit: 1,
     );
-  }
 
-  static Future<int> deleteProduct(int id) async {
-    final dbs = await db();
-    return await dbs.delete('products', where: 'id = ?', whereArgs: [id]);
-  }
-
-  static Future<List<ProductModel>> getProducts() async {
-    final dbs = await db();
-    final List<Map<String, dynamic>> maps = await dbs.query('products');
-
-    return maps.map((e) => ProductModel.fromMap(e)).toList();
+    return results.isNotEmpty;
   }
 }

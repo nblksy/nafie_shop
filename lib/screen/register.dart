@@ -51,7 +51,7 @@ class _RegisterState extends State<Register> {
             password: passwordController.text.trim(),
             nama: namaController.text.trim(),
             noHP: noHpController.text.trim(),
-            role: selectedRole,
+            // role: selectedRole,
           ),
         );
 

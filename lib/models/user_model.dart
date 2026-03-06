@@ -4,7 +4,7 @@ class UserModel {
   final String password;
   final String nama;
   final String noHP;
-  final String role;
+  // final String role;
 
   UserModel({
     this.id,
@@ -12,7 +12,7 @@ class UserModel {
     required this.password,
     required this.nama,
     required this.noHP,
-    required this.role,
+    // required this.role,
   });
 
   Map<String, dynamic> toMap() {
@@ -22,7 +22,7 @@ class UserModel {
       'password': password,
       'nama': nama,
       'noHP': noHP,
-      'role': role,
+      // 'role': role,
     };
   }
 
@@ -33,7 +33,7 @@ class UserModel {
       password: map['password'],
       nama: map['nama'],
       noHP: map['noHP'],
-      role: map['role'],
+      // role: map['role'],
     );
   }
 }

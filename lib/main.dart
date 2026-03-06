@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:nafie_shop/screen/cart_page.dart';
 import 'package:nafie_shop/screen/home_page.dart';
 import 'package:nafie_shop/screen/login.dart';
 import 'package:nafie_shop/screen/splash_screen.dart';
 import 'package:nafie_shop/screen/welcome_page.dart';
+import 'package:nafie_shop/navbar/navigation_bar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -36,11 +38,12 @@ class MyApp extends StatelessWidget {
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
       home: SplashScreen(),
-      routes: {
-        '/welcome': (context) => const WelcomePage(),
-        '/login': (context) => const Login(),
-        // '/tugas9': (context) => const Tugas9Flutter(),
-      },
+      // routes: {
+      //   '/splash': (context) => const SplashScreen(),
+      //   '/welcome': (context) => const WelcomePage(),
+      //   '/login': (context) => const Login(),
+      //   '/homepage': (context) => const Tugas8Flutter(),
+      // },
     );
   }
 }
